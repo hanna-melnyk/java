@@ -1,0 +1,1147 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > TextIO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: TextIO (ss.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TextIO</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/55)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/366)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.utils;
+&nbsp;
+&nbsp;
+&nbsp;import javax.swing.*;
+&nbsp;import java.io.*;
+&nbsp;import java.util.IllegalFormatException;
+&nbsp;import java.util.regex.Matcher;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+&nbsp;/**
+&nbsp; * TextIO provides a set of static methods for reading and writing text.  By default, it reads
+&nbsp; * from standard input and writes to standard output, but it is possible to redirect the input
+&nbsp; * and output to files or to other input and output streams.  When the standard input and output
+&nbsp; * streams are being used, the input methods will not produce an error; instead, the user is
+&nbsp; * repeatedly prompted for input until a legal input is entered.  (If standard input has been
+&nbsp; * changed externally, as by file redirection on the command line, this is not a reasonable
+&nbsp; * behavior; to handle this case, TextIO will give up after 10 consecutive illegal inputs and
+&nbsp; * will throw an IllegalArgumentException.)  For the most part, any other
+&nbsp; * error will be translated into an IllegalArguementException.
+&nbsp; *
+&nbsp; * &lt;p&gt;For writing to standard output, the output methods in this class pretty much
+&nbsp; * duplicate the functionality of System.out, and System.out can be used interchangeably with them.
+&nbsp; *
+&nbsp; * &lt;p&gt;This class does not use optimal Java programming practices.  It is designed specifically to be easily
+&nbsp; * usable even by a beginning programmer who has not yet learned about objects and exceptions.  Therefore,
+&nbsp; * everything is in a single source file that compiles into a single class file, all the methods are
+&nbsp; * static methods, and none of the methods throw exceptions that would require try...catch statements.
+&nbsp; * Also for this reason, all exceptions are converted into IllegalArgumentExceptions, even when this
+&nbsp; * exception type doesn&#39;t really make sense.
+&nbsp; *
+&nbsp; * &lt;p&gt;This class requires Java 5.0 or higher. (A previous version of TextIO required only Java 1.1;
+&nbsp; * this version should work with any source code that used the previous version, but it has some new
+&nbsp; * features, including the type of formatted output that was introduced in Java 5 and the ability to
+&nbsp; * use files and streams.)
+&nbsp; */
+<b class="nc">&nbsp;public class TextIO {</b>
+&nbsp;
+&nbsp;    /* Modified November 2007 to empty the TextIO input buffer when switching from one
+&nbsp;     * input source to another. This fixes a bug that allows input from the previous input
+&nbsp;     * source to be read after the new source has been selected.
+&nbsp;     */
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The value returned by the peek() method when the input is at end-of-file.
+&nbsp;     * (The value of this constant is (char)0xFFFF.)
+&nbsp;     */
+&nbsp;    public final static char EOF = (char) 0xFFFF;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The value returned by the peek() method when the input is at end-of-line.
+&nbsp;     * The value of this constant is the character &#39;\n&#39;.
+&nbsp;     */
+&nbsp;    public final static char EOLN = &#39;\n&#39;;          // The value returned by peek() when at end-of-line.
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * After this method is called, input will be read from standard input (as it
+&nbsp;     * is in the default state).  If a file or stream was previously the input source, that file
+&nbsp;     * or stream is closed.
+&nbsp;     */
+&nbsp;    public static void readStandardInput() {
+<b class="nc">&nbsp;        if (readingStandardInput) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;        try {
+<b class="nc">&nbsp;            in.close();</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        emptyBuffer();  // Added November 2007</b>
+<b class="nc">&nbsp;        in = standardInput;</b>
+<b class="nc">&nbsp;        inputFileName = null;</b>
+<b class="nc">&nbsp;        readingStandardInput = true;</b>
+<b class="nc">&nbsp;        inputErrorCount = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * After this method is called, input will be read from inputStream, provided it
+&nbsp;     * is non-null.  If inputStream is null, then this method has the same effect
+&nbsp;     * as calling readStandardInput(); that is, future input will come from the
+&nbsp;     * standard input stream.
+&nbsp;     */
+&nbsp;    public static void readStream(InputStream inputStream) {
+<b class="nc">&nbsp;        if (inputStream == null) {</b>
+<b class="nc">&nbsp;            readStandardInput();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            readStream(new InputStreamReader(inputStream));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * After this method is called, input will be read from inputStream, provided it
+&nbsp;     * is non-null.  If inputStream is null, then this method has the same effect
+&nbsp;     * as calling readStandardInput(); that is, future input will come from the
+&nbsp;     * standard input stream.
+&nbsp;     */
+&nbsp;    public static void readStream(Reader inputStream) {
+<b class="nc">&nbsp;        if (inputStream == null) {</b>
+<b class="nc">&nbsp;            readStandardInput();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            if (inputStream instanceof BufferedReader) {</b>
+<b class="nc">&nbsp;                in = (BufferedReader) inputStream;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                in = new BufferedReader(inputStream);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            emptyBuffer();  // Added November 2007</b>
+<b class="nc">&nbsp;            inputFileName = null;</b>
+<b class="nc">&nbsp;            readingStandardInput = false;</b>
+<b class="nc">&nbsp;            inputErrorCount = 0;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Opens a file with a specified name for input.  If the file name is null, this has
+&nbsp;     * the same effect as calling readStandardInput(); that is, input will be read from standard
+&nbsp;     * input.  If an
+&nbsp;     * error occurs while trying to open the file, an exception of type IllegalArgumentException
+&nbsp;     * is thrown, and the input source is not changed.  If the file is opened
+&nbsp;     * successfully, then after this method is called, all of the input routines will read
+&nbsp;     * from the file, instead of from standard input.
+&nbsp;     */
+&nbsp;    public static void readFile(String fileName) {
+<b class="nc">&nbsp;        if (fileName == null) { // Go back to reading standard input</b>
+<b class="nc">&nbsp;            readStandardInput();</b>
+&nbsp;        } else {
+&nbsp;            BufferedReader newin;
+&nbsp;            try {
+<b class="nc">&nbsp;                newin = new BufferedReader(new FileReader(fileName));</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Can&#39;t open file \&quot;&quot; + fileName + &quot;\&quot; for input.\n&quot;</b>
+&nbsp;                        + &quot;(Error :&quot; + e + &quot;)&quot;);
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            if (!readingStandardInput) { // close current input stream</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    in.close();</b>
+<b class="nc">&nbsp;                } catch (Exception e) {</b>
+<b class="nc">&nbsp;                    e.printStackTrace();</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+<b class="nc">&nbsp;            emptyBuffer();  // Added November 2007</b>
+<b class="nc">&nbsp;            in = newin;</b>
+<b class="nc">&nbsp;            readingStandardInput = false;</b>
+<b class="nc">&nbsp;            inputErrorCount = 0;</b>
+<b class="nc">&nbsp;            inputFileName = fileName;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Puts a GUI file-selection dialog box on the screen in which the user can select
+&nbsp;     * an input file.  If the user cancels the dialog instead of selecting a file, it is
+&nbsp;     * not considered an error, but the return value of the subroutine is false.
+&nbsp;     * If the user does select a file, but there is an error while trying to open the
+&nbsp;     * file, then an exception of type IllegalArgumentException is thrown.  Finally, if
+&nbsp;     * the user selects a file and it is successfully opened, then the return value of the
+&nbsp;     * subroutine is true, and  the input routines will read from the file, instead of
+&nbsp;     * from standard input.   If the user cancels, or if any error occurs, then the
+&nbsp;     * previous input source is not changed.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;NOTE: Calling this method starts a GUI user interface thread, which can continue
+&nbsp;     * to run even if the thread that runs the main program ends.  If you use this method
+&nbsp;     * in a non-GUI program, it might be necessary to call System.exit(0) at the end of the main()
+&nbsp;     * routine to shut down the Java virtual machine completely.
+&nbsp;     */
+&nbsp;    public static boolean readUserSelectedFile() {
+<b class="nc">&nbsp;        if (fileDialog == null) {</b>
+<b class="nc">&nbsp;            fileDialog = new JFileChooser();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        fileDialog.setDialogTitle(&quot;Select File for Input&quot;);</b>
+<b class="nc">&nbsp;        int option = fileDialog.showOpenDialog(null);</b>
+<b class="nc">&nbsp;        if (option != JFileChooser.APPROVE_OPTION) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        File selectedFile = fileDialog.getSelectedFile();</b>
+&nbsp;        BufferedReader newin;
+&nbsp;        try {
+<b class="nc">&nbsp;            newin = new BufferedReader(new FileReader(selectedFile));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Can&#39;t open file \&quot;&quot; + selectedFile.getName() + &quot;\&quot; for input.\n&quot;</b>
+&nbsp;                    + &quot;(Error :&quot; + e + &quot;)&quot;);
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        if (!readingStandardInput) { // close current file</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                in.close();</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        emptyBuffer();  // Added November 2007</b>
+<b class="nc">&nbsp;        in = newin;</b>
+<b class="nc">&nbsp;        inputFileName = selectedFile.getName();</b>
+<b class="nc">&nbsp;        readingStandardInput = false;</b>
+<b class="nc">&nbsp;        inputErrorCount = 0;</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * After this method is called, output will be written to standard output (as it
+&nbsp;     * is in the default state).  If a file or stream was previously open for output, it
+&nbsp;     * will be closed.
+&nbsp;     */
+&nbsp;    public static void writeStandardOutput() {
+<b class="nc">&nbsp;        if (writingStandardOutput) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;        try {
+<b class="nc">&nbsp;            out.close();</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        outputFileName = null;</b>
+<b class="nc">&nbsp;        outputErrorCount = 0;</b>
+<b class="nc">&nbsp;        out = standardOutput;</b>
+<b class="nc">&nbsp;        writingStandardOutput = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * After this method is called, output will be sent to outputStream, provided it
+&nbsp;     * is non-null.  If outputStream is null, then this method has the same effect
+&nbsp;     * as calling writeStandardOutput(); that is, future output will be sent to the
+&nbsp;     * standard output stream.
+&nbsp;     */
+&nbsp;    public static void writeStream(OutputStream outputStream) {
+<b class="nc">&nbsp;        if (outputStream == null) {</b>
+<b class="nc">&nbsp;            writeStandardOutput();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            writeStream(new PrintWriter(outputStream));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * After this method is called, output will be sent to outputStream, provided it
+&nbsp;     * is non-null.  If outputStream is null, then this method has the same effect
+&nbsp;     * as calling writeStandardOutput(); that is, future output will be sent to the
+&nbsp;     * standard output stream.
+&nbsp;     */
+&nbsp;    public static void writeStream(PrintWriter outputStream) {
+<b class="nc">&nbsp;        if (outputStream == null) {</b>
+<b class="nc">&nbsp;            writeStandardOutput();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            out = outputStream;</b>
+<b class="nc">&nbsp;            outputFileName = null;</b>
+<b class="nc">&nbsp;            outputErrorCount = 0;</b>
+<b class="nc">&nbsp;            writingStandardOutput = false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Opens a file with a specified name for output.  If the file name is null, this has
+&nbsp;     * the same effect as calling writeStandardOutput(); that is, output will be sent to standard
+&nbsp;     * output.  If an
+&nbsp;     * error occurs while trying to open the file, an exception of type IllegalArgumentException
+&nbsp;     * is thrown.  If the file is opened successfully, then after this method is called,
+&nbsp;     * all of the output routines will write to the file, instead of to  standard output.
+&nbsp;     * If an error occurs, the output destination is not changed.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;NOTE: Calling this method starts a GUI user interface thread, which can continue
+&nbsp;     * to run even if the thread that runs the main program ends.  If you use this method
+&nbsp;     * in a non-GUI program, it might be necessary to call System.exit(0) at the end of the main()
+&nbsp;     * routine to shut down the Java virtual machine completely.
+&nbsp;     */
+&nbsp;    public static void writeFile(String fileName) {
+<b class="nc">&nbsp;        if (fileName == null) { // Go back to reading standard output</b>
+<b class="nc">&nbsp;            writeStandardOutput();</b>
+&nbsp;        } else {
+&nbsp;            PrintWriter newout;
+&nbsp;            try {
+<b class="nc">&nbsp;                newout = new PrintWriter(new FileWriter(fileName));</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Can&#39;t open file \&quot;&quot; + fileName + &quot;\&quot; for output.\n&quot;</b>
+&nbsp;                        + &quot;(Error :&quot; + e + &quot;)&quot;);
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            if (!writingStandardOutput) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    out.close();</b>
+<b class="nc">&nbsp;                } catch (Exception e) {</b>
+<b class="nc">&nbsp;                    e.printStackTrace();</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+<b class="nc">&nbsp;            out = newout;</b>
+<b class="nc">&nbsp;            writingStandardOutput = false;</b>
+<b class="nc">&nbsp;            outputFileName = fileName;</b>
+<b class="nc">&nbsp;            outputErrorCount = 0;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Puts a GUI file-selection dialog box on the screen in which the user can select
+&nbsp;     * an output file.  If the user cancels the dialog instead of selecting a file, it is
+&nbsp;     * not considered an error, but the return value of the subroutine is false.
+&nbsp;     * If the user does select a file, but there is an error while trying to open the
+&nbsp;     * file, then an exception of type IllegalArgumentException is thrown.  Finally, if
+&nbsp;     * the user selects a file and it is successfully opened, then the return value of the
+&nbsp;     * subroutine is true, and  the output routines will write to the file, instead of
+&nbsp;     * to standard output.  If the user cancels, or if an error occurs, then the current
+&nbsp;     * output destination is not changed.
+&nbsp;     */
+&nbsp;    public static boolean writeUserSelectedFile() {
+<b class="nc">&nbsp;        if (fileDialog == null) {</b>
+<b class="nc">&nbsp;            fileDialog = new JFileChooser();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        fileDialog.setDialogTitle(&quot;Select File for Output&quot;);</b>
+&nbsp;        File selectedFile;
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            int option = fileDialog.showSaveDialog(null);</b>
+<b class="nc">&nbsp;            if (option != JFileChooser.APPROVE_OPTION) {</b>
+<b class="nc">&nbsp;                return false;  // user canceled</b>
+&nbsp;            }
+<b class="nc">&nbsp;            selectedFile = fileDialog.getSelectedFile();</b>
+<b class="nc">&nbsp;            if (selectedFile.exists()) {</b>
+<b class="nc">&nbsp;                int response = JOptionPane.showConfirmDialog(null,</b>
+<b class="nc">&nbsp;                        &quot;The file \&quot;&quot; + selectedFile.getName() + &quot;\&quot; already exists.  Do you want to replace it?&quot;,</b>
+&nbsp;                        &quot;Replace existing file?&quot;,
+&nbsp;                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+<b class="nc">&nbsp;                if (response == JOptionPane.YES_OPTION) {</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                }
+&nbsp;            } else {
+&nbsp;                break;
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;        PrintWriter newout;
+&nbsp;        try {
+<b class="nc">&nbsp;            newout = new PrintWriter(new FileWriter(selectedFile));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Can&#39;t open file \&quot;&quot; + selectedFile.getName() + &quot;\&quot; for output.\n&quot;</b>
+&nbsp;                    + &quot;(Error :&quot; + e + &quot;)&quot;);
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        if (!writingStandardOutput) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                out.close();</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        out = newout;</b>
+<b class="nc">&nbsp;        writingStandardOutput = false;</b>
+<b class="nc">&nbsp;        outputFileName = selectedFile.getName();</b>
+<b class="nc">&nbsp;        outputErrorCount = 0;</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If TextIO is currently reading from a file, then the return value is the name of the file.
+&nbsp;     * If the class is reading from standard input or from a stream, then the return value is null.
+&nbsp;     */
+&nbsp;    public static String getInputFileName() {
+<b class="nc">&nbsp;        return inputFileName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If TextIO is currently writing to a file, then the return value is the name of the file.
+&nbsp;     * If the class is writing to standard output or to a stream, then the return value is null.
+&nbsp;     */
+&nbsp;    public static String getOutputFileName() {
+<b class="nc">&nbsp;        return outputFileName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // *************************** Output Methods *********************************
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Write a single value to the current output destination, using the default format
+&nbsp;     * and no extra spaces.  This method will handle any type of parameter, even one
+&nbsp;     * whose type is one of the primitive types.
+&nbsp;     */
+&nbsp;    public static void put(Object x) {
+<b class="nc">&nbsp;        out.print(x);</b>
+<b class="nc">&nbsp;        out.flush();</b>
+<b class="nc">&nbsp;        if (out.checkError()) {</b>
+<b class="nc">&nbsp;            outputError(&quot;Error while writing output.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Write a single value to the current output destination, using the default format
+&nbsp;     * and outputting at least minChars characters (with extra spaces added before the
+&nbsp;     * output value if necessary).  This method will handle any type of parameter, even one
+&nbsp;     * whose type is one of the primitive types.
+&nbsp;     *
+&nbsp;     * @param x        The value to be output, which can be of any type.
+&nbsp;     * @param minChars The minimum number of characters to use for the output.  If x requires fewer
+&nbsp;     *                 then this number of characters, then extra spaces are added to the front of x to bring
+&nbsp;     *                 the total up to minChars.  If minChars is less than or equal to zero, then x will be printed
+&nbsp;     *                 in the minimum number of spaces possible.
+&nbsp;     */
+&nbsp;    public static void put(Object x, int minChars) {
+<b class="nc">&nbsp;        if (minChars &lt;= 0) {</b>
+<b class="nc">&nbsp;            out.print(x);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            out.printf(&quot;%&quot; + minChars + &quot;s&quot;, x);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        out.flush();</b>
+<b class="nc">&nbsp;        if (out.checkError()) {</b>
+<b class="nc">&nbsp;            outputError(&quot;Error while writing output.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This is equivalent to put(x), followed by an end-of-line.
+&nbsp;     */
+&nbsp;    public static void putln(Object x) {
+<b class="nc">&nbsp;        out.println(x);</b>
+<b class="nc">&nbsp;        out.flush();</b>
+<b class="nc">&nbsp;        if (out.checkError()) {</b>
+<b class="nc">&nbsp;            outputError(&quot;Error while writing output.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This is equivalent to put(x,minChars), followed by an end-of-line.
+&nbsp;     */
+&nbsp;    public static void putln(Object x, int minChars) {
+<b class="nc">&nbsp;        put(x, minChars);</b>
+<b class="nc">&nbsp;        out.println();</b>
+<b class="nc">&nbsp;        out.flush();</b>
+<b class="nc">&nbsp;        if (out.checkError()) {</b>
+<b class="nc">&nbsp;            outputError(&quot;Error while writing output.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Write an end-of-line character to the current output destination.
+&nbsp;     */
+&nbsp;    public static void putln() {
+<b class="nc">&nbsp;        out.println();</b>
+<b class="nc">&nbsp;        out.flush();</b>
+<b class="nc">&nbsp;        if (out.checkError()) {</b>
+<b class="nc">&nbsp;            outputError(&quot;Error while writing output.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Writes formatted output values to the current output destination.  This method has the
+&nbsp;     * same function as System.out.printf(); the details of formatted output are not discussed
+&nbsp;     * here.  The first parameter is a string that describes the format of the output.  There
+&nbsp;     * can be any number of additional parameters; these specify the values to be output and
+&nbsp;     * can be of any type.  This method will throw an IllegalArgumentException if the
+&nbsp;     * format string is null or if the format string is illegal for the values that are being
+&nbsp;     * output.
+&nbsp;     */
+&nbsp;    public static void putf(String format, Object... items) {
+<b class="nc">&nbsp;        if (format == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Null format string in TextIO.putf() method.&quot;);</b>
+&nbsp;        }
+&nbsp;        try {
+<b class="nc">&nbsp;            out.printf(format, items);</b>
+<b class="nc">&nbsp;        } catch (IllegalFormatException e) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Illegal format string in TextIO.putf() method.&quot;);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        out.flush();</b>
+<b class="nc">&nbsp;        if (out.checkError()) {</b>
+<b class="nc">&nbsp;            outputError(&quot;Error while writing output.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // *************************** Input Methods *********************************
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Test whether the next character in the current input source is an end-of-line.  Note that
+&nbsp;     * this method does NOT skip whitespace before testing for end-of-line -- if you want to do
+&nbsp;     * that, call skipBlanks() first.
+&nbsp;     */
+&nbsp;    public static boolean eoln() {
+<b class="nc">&nbsp;        return peek() == &#39;\n&#39;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Test whether the next character in the current input source is an end-of-file.  Note that
+&nbsp;     * this method does NOT skip whitespace before testing for end-of-line -- if you want to do
+&nbsp;     * that, call skipBlanks() or skipWhitespace() first.
+&nbsp;     */
+&nbsp;    public static boolean eof() {
+<b class="nc">&nbsp;        return peek() == EOF;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Reads the next character from the current input source.  The character can be a whitespace
+&nbsp;     * character; compare this to the getChar() method, which skips over whitespace and returns the
+&nbsp;     * next non-whitespace character.  An end-of-line is always returned as the character &#39;\n&#39;, even
+&nbsp;     * when the actual end-of-line in the input source is something else, such as &#39;\r&#39; or &quot;\r\n&quot;.
+&nbsp;     * This method will throw an IllegalArgumentException if the input is at end-of-file (which will
+&nbsp;     * not ordinarily happen if reading from standard input).
+&nbsp;     */
+&nbsp;    public static char getAnyChar() {
+<b class="nc">&nbsp;        return readChar();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the next character in the current input source, without actually removing that
+&nbsp;     * character from the input.  The character can be a whitespace character and can be the
+&nbsp;     * end-of-file character (specified by the constant TextIO.EOF).An end-of-line is always returned
+&nbsp;     * as the character &#39;\n&#39;, even when the actual end-of-line in the input source is something else,
+&nbsp;     * such as &#39;\r&#39; or &quot;\r\n&quot;.  This method never causes an error.
+&nbsp;     */
+&nbsp;    public static char peek() {
+<b class="nc">&nbsp;        return lookChar();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips over any whitespace characters, except for end-of-lines.  After this method is called,
+&nbsp;     * the next input character is either an end-of-line, an end-of-file, or a non-whitespace character.
+&nbsp;     * This method never causes an error.  (Ordinarily, end-of-file is not possible when reading from
+&nbsp;     * standard input.)
+&nbsp;     */
+&nbsp;    public static void skipBlanks() {
+<b class="nc">&nbsp;        char ch = lookChar();</b>
+<b class="nc">&nbsp;        while (ch != EOF &amp;&amp; ch != &#39;\n&#39; &amp;&amp; Character.isWhitespace(ch)) {</b>
+<b class="nc">&nbsp;            readChar();</b>
+<b class="nc">&nbsp;            ch = lookChar();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips over any whitespace characters, including for end-of-lines.  After this method is called,
+&nbsp;     * the next input character is either an end-of-file or a non-whitespace character.
+&nbsp;     * This method never causes an error. (Ordinarily, end-of-file is not possible when reading from
+&nbsp;     * standard input.)
+&nbsp;     */
+&nbsp;    private static void skipWhitespace() {
+<b class="nc">&nbsp;        char ch = lookChar();</b>
+<b class="nc">&nbsp;        while (ch != EOF &amp;&amp; Character.isWhitespace(ch)) {</b>
+<b class="nc">&nbsp;            readChar();</b>
+<b class="nc">&nbsp;            if (ch == &#39;\n&#39; &amp;&amp; readingStandardInput &amp;&amp; writingStandardOutput) {</b>
+<b class="nc">&nbsp;                out.print(&quot;? &quot;);</b>
+<b class="nc">&nbsp;                out.flush();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            ch = lookChar();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type byte from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static byte getlnByte() {
+<b class="nc">&nbsp;        byte x = getByte();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type short from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static short getlnShort() {
+<b class="nc">&nbsp;        short x = getShort();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type int from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static int getlnInt() {
+<b class="nc">&nbsp;        int x = getInt();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type long from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static long getlnLong() {
+<b class="nc">&nbsp;        long x = getLong();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type float from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static float getlnFloat() {
+<b class="nc">&nbsp;        float x = getFloat();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type double from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static double getlnDouble() {
+<b class="nc">&nbsp;        double x = getDouble();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type char from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  Note that the value
+&nbsp;     * that is returned will be a non-whitespace character; compare this with the getAnyChar() method.
+&nbsp;     * When using standard IO, this will not produce an error.  In other cases, an error can occur if
+&nbsp;     * an end-of-file is encountered.
+&nbsp;     */
+&nbsp;    public static char getlnChar() {
+<b class="nc">&nbsp;        char x = getChar();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type boolean from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;Legal inputs for a boolean input are: true, t, yes, y, 1, false, f, no, n, and 0; letters can be
+&nbsp;     * either upper case or lower case. One &quot;word&quot; of input is read, using the getWord() method, and it
+&nbsp;     * must be one of these; note that the &quot;word&quot;  must be terminated by a whitespace character (or end-of-file).
+&nbsp;     */
+&nbsp;    public static boolean getlnBoolean() {
+<b class="nc">&nbsp;        boolean x = getBoolean();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads one &quot;word&quot; from input, discarding the rest of
+&nbsp;     * the current line of input (including the next end-of-line character, if any).  A word is defined as
+&nbsp;     * a sequence of non-whitespace characters (not just letters!).   When using standard IO,
+&nbsp;     * this will not produce an error.  In other cases, an IllegalArgumentException will be thrown
+&nbsp;     * if an end-of-file is encountered.
+&nbsp;     */
+&nbsp;    public static String getlnWord() {
+<b class="nc">&nbsp;        String x = getWord();</b>
+<b class="nc">&nbsp;        emptyBuffer();</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This is identical to getln().
+&nbsp;     */
+&nbsp;    public static String getlnString() {
+<b class="nc">&nbsp;        return getln();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Reads all the characters from the current input source, up to the next end-of-line.  The end-of-line
+&nbsp;     * is read but is not included in the return value.  Any other whitespace characters on the line are retained,
+&nbsp;     * even if they occur at the start of input.  The return value will be an empty string if there are
+&nbsp;     * no characters before the end-of-line.  When using standard IO, this will not produce an error.
+&nbsp;     * In other cases, an IllegalArgumentException will be thrown if an end-of-file is encountered.
+&nbsp;     */
+&nbsp;    public static String getln() {
+<b class="nc">&nbsp;        StringBuffer s = new StringBuffer(100);</b>
+<b class="nc">&nbsp;        char ch = readChar();</b>
+<b class="nc">&nbsp;        while (ch != &#39;\n&#39;) {</b>
+<b class="nc">&nbsp;            s.append(ch);</b>
+<b class="nc">&nbsp;            ch = readChar();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return s.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type byte from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static byte getByte() {
+<b class="nc">&nbsp;        return (byte) readInteger(-128L, 127L);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type short from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static short getShort() {
+<b class="nc">&nbsp;        return (short) readInteger(-32768L, 32767L);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type int from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static int getInt() {
+<b class="nc">&nbsp;        return (int) readInteger(Integer.MIN_VALUE, Integer.MAX_VALUE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type long from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static long getLong() {
+<b class="nc">&nbsp;        return readInteger(Long.MIN_VALUE, Long.MAX_VALUE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a single non-whitespace character from input.  Any additional
+&nbsp;     * characters on the current line of input are retained, and will be read by the next input operation. When using
+&nbsp;     * standard IO,this will not produce an error. In other cases, an IllegalArgumentException will be thrown if an
+&nbsp;     * end-of-file is encountered.
+&nbsp;     */
+&nbsp;    public static char getChar() {
+<b class="nc">&nbsp;        skipWhitespace();</b>
+<b class="nc">&nbsp;        return readChar();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type float from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static float getFloat() {
+<b class="nc">&nbsp;        float x = 0.0F;</b>
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            String str = readRealString();</b>
+<b class="nc">&nbsp;            if (str == null) {</b>
+<b class="nc">&nbsp;                errorMessage(&quot;Floating point number not found.&quot;,</b>
+&nbsp;                        &quot;Real number in the range &quot; + (-Float.MAX_VALUE) + &quot; to &quot; + Float.MAX_VALUE);
+&nbsp;            } else {
+&nbsp;                try {
+<b class="nc">&nbsp;                    x = Float.parseFloat(str);</b>
+<b class="nc">&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;                    errorMessage(&quot;Illegal floating point input, &quot; + str + &quot;.&quot;,</b>
+&nbsp;                            &quot;Real number in the range &quot; + (-Float.MAX_VALUE) + &quot; to &quot; + Float.MAX_VALUE);
+<b class="nc">&nbsp;                    continue;</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                if (Float.isInfinite(x)) {</b>
+<b class="nc">&nbsp;                    errorMessage(&quot;Floating point input outside of legal range, &quot; + str + &quot;.&quot;,</b>
+&nbsp;                            &quot;Real number in the range &quot; + (-Float.MAX_VALUE) + &quot; to &quot; + Float.MAX_VALUE);
+<b class="nc">&nbsp;                    continue;</b>
+&nbsp;                }
+&nbsp;                break;
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        inputErrorCount = 0;</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type double from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     */
+&nbsp;    public static double getDouble() {
+<b class="nc">&nbsp;        double x = 0.0;</b>
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            String str = readRealString();</b>
+<b class="nc">&nbsp;            if (str == null) {</b>
+<b class="nc">&nbsp;                errorMessage(&quot;Floating point number not found.&quot;,</b>
+&nbsp;                        &quot;Real number in the range &quot; + (-Double.MAX_VALUE) + &quot; to &quot; + Double.MAX_VALUE);
+&nbsp;            } else {
+&nbsp;                try {
+<b class="nc">&nbsp;                    x = Double.parseDouble(str);</b>
+<b class="nc">&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;                    errorMessage(&quot;Illegal floating point input, &quot; + str + &quot;.&quot;,</b>
+&nbsp;                            &quot;Real number in the range &quot; + (-Double.MAX_VALUE) + &quot; to &quot; + Double.MAX_VALUE);
+<b class="nc">&nbsp;                    continue;</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                if (Double.isInfinite(x)) {</b>
+<b class="nc">&nbsp;                    errorMessage(&quot;Floating point input outside of legal range, &quot; + str + &quot;.&quot;,</b>
+&nbsp;                            &quot;Real number in the range &quot; + (-Double.MAX_VALUE) + &quot; to &quot; + Double.MAX_VALUE);
+<b class="nc">&nbsp;                    continue;</b>
+&nbsp;                }
+&nbsp;                break;
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        inputErrorCount = 0;</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads one &quot;word&quot; from input. Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  A word is defined as
+&nbsp;     * a sequence of non-whitespace characters (not just letters!).   When using standard IO,
+&nbsp;     * this will not produce an error.  In other cases, an IllegalArgumentException will be thrown
+&nbsp;     * if an end-of-file is encountered.
+&nbsp;     */
+&nbsp;    public static String getWord() {
+<b class="nc">&nbsp;        skipWhitespace();</b>
+<b class="nc">&nbsp;        StringBuffer str = new StringBuffer(50);</b>
+<b class="nc">&nbsp;        char ch = lookChar();</b>
+<b class="nc">&nbsp;        while (ch == EOF || !Character.isWhitespace(ch)) {</b>
+<b class="nc">&nbsp;            str.append(readChar());</b>
+<b class="nc">&nbsp;            ch = lookChar();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return str.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Skips whitespace characters and then reads a value of type boolean from input.  Any additional characters on
+&nbsp;     * the current line of input are retained, and will be read by the next input operation.  When using standard IO,
+&nbsp;     * this will not produce an error; the user will be prompted repeatedly for input until a legal value
+&nbsp;     * is input.  In other cases, an IllegalArgumentException will be thrown if a legal value is not found.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;Legal inputs for a boolean input are: true, t, yes, y, 1, false, f, no, n, and 0; letters can be
+&nbsp;     * either upper case or lower case. One &quot;word&quot; of input is read, using the getWord() method, and it
+&nbsp;     * must be one of these; note that the &quot;word&quot;  must be terminated by a whitespace character (or end-of-file).
+&nbsp;     */
+&nbsp;    public static boolean getBoolean() {
+<b class="nc">&nbsp;        boolean ans = false;</b>
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            String s = getWord();</b>
+<b class="nc">&nbsp;            if (s.equalsIgnoreCase(&quot;true&quot;) || s.equalsIgnoreCase(&quot;t&quot;)</b>
+<b class="nc">&nbsp;                    || s.equalsIgnoreCase(&quot;yes&quot;) || s.equalsIgnoreCase(&quot;y&quot;)</b>
+<b class="nc">&nbsp;                    || s.equals(&quot;1&quot;)) {</b>
+<b class="nc">&nbsp;                ans = true;</b>
+<b class="nc">&nbsp;                break;</b>
+<b class="nc">&nbsp;            } else if (s.equalsIgnoreCase(&quot;false&quot;) || s.equalsIgnoreCase(&quot;f&quot;)</b>
+<b class="nc">&nbsp;                    || s.equalsIgnoreCase(&quot;no&quot;) || s.equalsIgnoreCase(&quot;n&quot;)</b>
+<b class="nc">&nbsp;                    || s.equals(&quot;0&quot;)) {</b>
+<b class="nc">&nbsp;                ans = false;</b>
+<b class="nc">&nbsp;                break;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                errorMessage(&quot;Illegal boolean input value.&quot;,</b>
+&nbsp;                        &quot;one of:  true, false, t, f, yes, no, y, n, 0, or 1&quot;);
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        inputErrorCount = 0;</b>
+<b class="nc">&nbsp;        return ans;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ***************** Everything beyond this point is private implementation detail *******************
+&nbsp;
+&nbsp;    // Name of file that is the current input source, or null if the source is not a file.
+&nbsp;    private static String inputFileName;
+&nbsp;    // Name of file that is the current output destination, or null if the destination is not a file.
+&nbsp;    private static String outputFileName;
+&nbsp;
+&nbsp;    // Dialog used by readUserSelectedFile() and writeUserSelectedFile()
+&nbsp;    private static JFileChooser fileDialog;
+&nbsp;
+&nbsp;    // wraps standard input stream
+<b class="nc">&nbsp;    private final static BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));</b>
+&nbsp;    // wraps standard output stream
+<b class="nc">&nbsp;    private final static PrintWriter standardOutput = new PrintWriter(System.out);</b>
+&nbsp;
+&nbsp;    // Stream that data is read from; the current input source.
+<b class="nc">&nbsp;    private static BufferedReader in = standardInput;</b>
+&nbsp;    // Stream that data is written to; the current output destination.
+<b class="nc">&nbsp;    private static PrintWriter out = standardOutput;</b>
+&nbsp;
+<b class="nc">&nbsp;    private static boolean readingStandardInput = true;</b>
+<b class="nc">&nbsp;    private static boolean writingStandardOutput = true;</b>
+&nbsp;
+&nbsp;    // Number of consecutive errors on standard input; reset to 0 when a successful read occurs.
+&nbsp;    private static int inputErrorCount;
+&nbsp;    // Number of errors on standard output since it was selected as the output destination.
+&nbsp;    private static int outputErrorCount;
+&nbsp;
+&nbsp;    // Used for reading integer numbers; created from the integer Regex Pattern.
+&nbsp;    private static Matcher integerMatcher;
+&nbsp;    // Used for reading floating point numbers; created from the floatRegex Pattern.
+&nbsp;    private static Matcher floatMatcher;
+<b class="nc">&nbsp;    private final static Pattern integerRegex = Pattern.compile(&quot;(\\+|-)?[0-9]+&quot;);</b>
+<b class="nc">&nbsp;    private final static Pattern floatRegex =</b>
+<b class="nc">&nbsp;            Pattern.compile(&quot;(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?&quot;);</b>
+&nbsp;
+&nbsp;    // One line read from input.
+<b class="nc">&nbsp;    private static String buffer = null;</b>
+&nbsp;    // Position of next char in input line that has not yet been processed.
+<b class="nc">&nbsp;    private static int pos = 0;</b>
+&nbsp;
+&nbsp;    private static String readRealString() {   // read chars from input following syntax of real numbers
+<b class="nc">&nbsp;        skipWhitespace();</b>
+<b class="nc">&nbsp;        if (lookChar() == EOF) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (floatMatcher == null) {</b>
+<b class="nc">&nbsp;            floatMatcher = floatRegex.matcher(buffer);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        floatMatcher.region(pos, buffer.length());</b>
+<b class="nc">&nbsp;        if (floatMatcher.lookingAt()) {</b>
+<b class="nc">&nbsp;            String str = floatMatcher.group();</b>
+<b class="nc">&nbsp;            pos = floatMatcher.end();</b>
+<b class="nc">&nbsp;            return str;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String readIntegerString() {  // read chars from input following syntax of integers
+<b class="nc">&nbsp;        skipWhitespace();</b>
+<b class="nc">&nbsp;        if (lookChar() == EOF) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (integerMatcher == null) {</b>
+<b class="nc">&nbsp;            integerMatcher = integerRegex.matcher(buffer);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        integerMatcher.region(pos, buffer.length());</b>
+<b class="nc">&nbsp;        if (integerMatcher.lookingAt()) {</b>
+<b class="nc">&nbsp;            String str = integerMatcher.group();</b>
+<b class="nc">&nbsp;            pos = integerMatcher.end();</b>
+<b class="nc">&nbsp;            return str;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static long readInteger(long min, long max) {  // read long integer, limited to specified range
+<b class="nc">&nbsp;        long x = 0;</b>
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            String s = readIntegerString();</b>
+<b class="nc">&nbsp;            if (s == null) {</b>
+<b class="nc">&nbsp;                errorMessage(&quot;Integer value not found in input.&quot;,</b>
+&nbsp;                        &quot;Integer in the range &quot; + min + &quot; to &quot; + max);
+&nbsp;            } else {
+<b class="nc">&nbsp;                String str = s.toString();</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    x = Long.parseLong(str);</b>
+<b class="nc">&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;                    errorMessage(&quot;Illegal integer input, &quot; + str + &quot;.&quot;,</b>
+&nbsp;                            &quot;Integer in the range &quot; + min + &quot; to &quot; + max);
+<b class="nc">&nbsp;                    continue;</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                if (x &lt; min || x &gt; max) {</b>
+<b class="nc">&nbsp;                    errorMessage(&quot;Integer input outside of legal range, &quot; + str + &quot;.&quot;,</b>
+&nbsp;                            &quot;Integer in the range &quot; + min + &quot; to &quot; + max);
+<b class="nc">&nbsp;                    continue;</b>
+&nbsp;                }
+&nbsp;                break;
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        inputErrorCount = 0;</b>
+<b class="nc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private static void errorMessage(String message, String expecting) {  // Report error on input.
+<b class="nc">&nbsp;        if (readingStandardInput &amp;&amp; writingStandardOutput) {</b>
+&nbsp;            // inform user of error and force user to re-enter.
+<b class="nc">&nbsp;            out.println();</b>
+<b class="nc">&nbsp;            out.print(&quot;  *** Error in input: &quot; + message + &quot;\n&quot;);</b>
+<b class="nc">&nbsp;            out.print(&quot;  *** Expecting: &quot; + expecting + &quot;\n&quot;);</b>
+<b class="nc">&nbsp;            out.print(&quot;  *** Discarding Input: &quot;);</b>
+<b class="nc">&nbsp;            if (lookChar() == &#39;\n&#39;) {</b>
+<b class="nc">&nbsp;                out.print(&quot;(end-of-line)\n\n&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                while (lookChar() != &#39;\n&#39;) {   // Discard and echo remaining chars on the current line of input.</b>
+<b class="nc">&nbsp;                    out.print(readChar());</b>
+&nbsp;                }
+<b class="nc">&nbsp;                out.print(&quot;\n\n&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            out.print(&quot;Please re-enter: &quot;);</b>
+<b class="nc">&nbsp;            out.flush();</b>
+<b class="nc">&nbsp;            readChar();  // discard the end-of-line character</b>
+<b class="nc">&nbsp;            inputErrorCount++;</b>
+<b class="nc">&nbsp;            if (inputErrorCount &gt;= 10) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Too many input consecutive input errors on standard input.&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (inputFileName != null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Error while reading from file \&quot;&quot; + inputFileName + &quot;\&quot;:\n&quot;</b>
+&nbsp;                    + message + &quot;\nExpecting &quot; + expecting);
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Error while reading from inptu stream:\n&quot;</b>
+&nbsp;                    + message + &quot;\nExpecting &quot; + expecting);
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static char lookChar() {  // return next character from input
+<b class="nc">&nbsp;        if (buffer == null || pos &gt; buffer.length()) {</b>
+<b class="nc">&nbsp;            fillBuffer();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (buffer == null) {</b>
+<b class="nc">&nbsp;            return EOF;</b>
+<b class="nc">&nbsp;        } else if (pos == buffer.length()) {</b>
+<b class="nc">&nbsp;            return &#39;\n&#39;;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return buffer.charAt(pos);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static char readChar() {  // return and discard next character from input
+<b class="nc">&nbsp;        char ch = lookChar();</b>
+<b class="nc">&nbsp;        if (buffer == null) {</b>
+<b class="nc">&nbsp;            if (readingStandardInput) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Attempt to read past end-of-file in standard input???&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Attempt to read past end-of-file in file \&quot;&quot;</b>
+&nbsp;                        + inputFileName + &quot;\&quot;.&quot;);
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        pos++;</b>
+<b class="nc">&nbsp;        return ch;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void fillBuffer() {    // Wait for user to type a line and press return,
+&nbsp;        try {
+<b class="nc">&nbsp;            buffer = in.readLine();</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            if (readingStandardInput) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Error while reading standard input???&quot;);</b>
+<b class="nc">&nbsp;            } else if (inputFileName != null) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Error while attempting to read from file \&quot;&quot;</b>
+&nbsp;                        + inputFileName + &quot;\&quot;.&quot;);
+&nbsp;            } else {
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Errow while attempting to read form an input stream.&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        pos = 0;</b>
+<b class="nc">&nbsp;        floatMatcher = null;</b>
+<b class="nc">&nbsp;        integerMatcher = null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void emptyBuffer() {   // discard the rest of the current line of input
+<b class="nc">&nbsp;        buffer = null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void outputError(String message) {  // Report an error on output.
+<b class="nc">&nbsp;        if (writingStandardOutput) {</b>
+<b class="nc">&nbsp;            System.err.println(&quot;Error occurred in TextIO while writing to standard output!!&quot;);</b>
+<b class="nc">&nbsp;            outputErrorCount++;</b>
+<b class="nc">&nbsp;            if (outputErrorCount &gt;= 10) {</b>
+<b class="nc">&nbsp;                outputErrorCount = 0;</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Too many errors while writing to standard output.&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (outputFileName != null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Error occurred while writing to file \&quot;&quot;</b>
+&nbsp;                    + outputFileName + &quot;\&quot;:\n   &quot; + message);
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Error occurred while writing to output stream:\n   &quot; + message);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;} // end of class TextIO
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

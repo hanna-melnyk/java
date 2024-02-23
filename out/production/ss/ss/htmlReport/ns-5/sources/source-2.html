@@ -1,0 +1,225 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > Hotel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week2.hotel</a>
+</div>
+
+<h1>Coverage Summary for Class: Hotel (ss.week2.hotel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Hotel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/43)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week2.hotel;
+&nbsp;
+<b class="nc">&nbsp;public class Hotel {</b>
+&nbsp;    private String name;
+&nbsp;
+&nbsp;    private Room room1;
+&nbsp;    private Room room2;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    public Hotel(String name) {</b>
+<b class="nc">&nbsp;        this.name = name;</b>
+<b class="nc">&nbsp;        room1 = new Room(101);</b>
+<b class="nc">&nbsp;        room2 = new Room(102);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @return The name of the hotel.
+&nbsp;     */
+&nbsp;    public String getHotelName() {
+<b class="nc">&nbsp;        return this.name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @return The first available free room or null if no rooms are available.
+&nbsp;     */
+&nbsp;    public Room getFreeRoom() {
+<b class="nc">&nbsp;        if (this.room1.getGuest() == null) {</b>
+<b class="nc">&nbsp;            return this.room1;</b>
+<b class="nc">&nbsp;        } else if (this.room2.getGuest() == null) {</b>
+<b class="nc">&nbsp;            return this.room2;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param name name of the guest
+&nbsp;     * @requires room.getGuest() != null
+&nbsp;     * @return Room - room into which guest has checked in, or null if guest is not found in any room*/
+&nbsp;    public Room getRoom(String name) {
+<b class="nc">&nbsp;        if (this.room1.getGuest() != null &amp;&amp; this.room1.getGuest().getName().equals(name)) {</b>
+<b class="nc">&nbsp;            return this.room1;</b>
+<b class="nc">&nbsp;        } else if (this.room2.getGuest() != null &amp;&amp; this.room2.getGuest().getName().equals(name)) {</b>
+<b class="nc">&nbsp;            return this.room2;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param name The name of the guest of type String.
+&nbsp;     * @requires getRoom(guestName) == null &amp;&amp; getFreeRoom() != null
+&nbsp;     * @return The room where the new guest has checked in, or null if the specified guest is already checked in or no rooms are available.
+&nbsp;     */
+&nbsp;    public Room checkIn(String name) {
+<b class="nc">&nbsp;        if (this.getRoom(name) != null || this.getFreeRoom() == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+<b class="nc">&nbsp;        } else if (this.getFreeRoom() != null) {</b>
+<b class="nc">&nbsp;            Room freeRoom = this.getFreeRoom();</b>
+<b class="nc">&nbsp;            Guest newGuest = new Guest(name);</b>
+<b class="nc">&nbsp;            freeRoom.setGuest(newGuest);</b>
+<b class="nc">&nbsp;            return freeRoom;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param name The name of the guest to check out.
+&nbsp;     * @requires getRoom(guestName) != null
+&nbsp;     * @ensures The guest is checked out, and the safe in the room is deactivated.
+&nbsp;     */
+&nbsp;    public void checkOut(String name) {
+<b class="nc">&nbsp;        assert name != null: &quot;Guest name is non existent&quot;;</b>
+<b class="nc">&nbsp;        Room assignedRoom = this.getRoom(name);</b>
+<b class="nc">&nbsp;        if (assignedRoom != null)     {</b>
+<b class="nc">&nbsp;            assignedRoom.getGuest().checkout();</b>
+&nbsp;
+<b class="nc">&nbsp;            Safe assignedSafe = assignedRoom.getSafe();</b>
+<b class="nc">&nbsp;            assignedSafe.deactivate();</b>
+<b class="nc">&nbsp;            assignedRoom.setGuest(null);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @requires room.getSafe() != null
+&nbsp;     * @returns description of the rooms: room number, guest name, safe status*/
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        String roomsInfo = &quot;&quot;;</b>
+<b class="nc">&nbsp;        String room1Guest = &quot;&quot;;</b>
+<b class="nc">&nbsp;        String room2Guest = &quot;&quot;;</b>
+<b class="nc">&nbsp;        if (room1.getGuest() == null) {</b>
+<b class="nc">&nbsp;            room1Guest = &quot;empty&quot;;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            room1Guest = &quot;Guest: &quot; + room1.getGuest().getName();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (room2.getGuest() == null) {</b>
+<b class="nc">&nbsp;            room2Guest = &quot;empty&quot;;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            room2Guest = &quot;Guest: &quot; + room2.getGuest().getName();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        String roomsInfo1 = room1 + &quot;: &quot; + room1Guest + &quot;\n safe active: &quot; + room1.getSafe().isActive();</b>
+<b class="nc">&nbsp;        String roomsInfo2 = room2 + &quot;: &quot; + room2Guest + &quot;,\n safe active: &quot; + room2.getSafe().isActive();</b>
+<b class="nc">&nbsp;        return roomsInfo1 + &quot;\n&quot; + roomsInfo2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

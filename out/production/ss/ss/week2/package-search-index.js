@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"ss.utils"},{"l":"ss.week1"},{"l":"ss.week1.hotel"},{"l":"ss.week2"},{"l":"ss.week2.hotel"},{"l":"ss.week2.test"},{"l":"ss.week3.bill"},{"l":"ss.week3.hotel"},{"l":"ss.week3.password"},{"l":"ss.week3.test"}]

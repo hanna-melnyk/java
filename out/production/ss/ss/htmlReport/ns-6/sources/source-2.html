@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > GuestTest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week2.test</a>
+</div>
+
+<h1>Coverage Summary for Class: GuestTest (ss.week2.test)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GuestTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week2.test;
+&nbsp;
+&nbsp;import org.junit.jupiter.api.BeforeEach;
+&nbsp;import org.junit.jupiter.api.Test;
+&nbsp;
+&nbsp;import ss.week2.hotel.Guest;
+&nbsp;import ss.week2.hotel.Room;
+&nbsp;
+&nbsp;import static org.junit.jupiter.api.Assertions.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Test program for Room and Guest.
+&nbsp; * Lab Exercise Software Systems
+&nbsp; * @author Arend Rensink, Jip Spel
+&nbsp; */
+<b class="nc">&nbsp;public class GuestTest {</b>
+&nbsp;	/** Test variable for a &lt;tt&gt;Guest&lt;/tt&gt;-object. */
+&nbsp;    private Guest ot;
+&nbsp;	/** Test variable for a &lt;tt&gt;Guest&lt;/tt&gt;-object. */
+&nbsp;    private Guest sien;
+&nbsp;	/** Test variable for a &lt;tt&gt;Room&lt;/tt&gt;-object. */
+&nbsp;    private Room k101;
+&nbsp;	/** Test variable for a &lt;tt&gt;Room&lt;/tt&gt;-object. */
+&nbsp;    private Room k102;
+&nbsp;
+&nbsp;    /**
+&nbsp;	 * Sets initial variables to a well-defined initial value.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Assigns a &lt;tt&gt;Guest&lt;/tt&gt; object to the &lt;tt&gt;ot&lt;/tt&gt; instance variable with the
+&nbsp;	 * name {@code &quot;Ot&quot;} and assigns a &lt;tt&gt;Guest&lt;/tt&gt; object to the &lt;tt&gt;sien&lt;/tt&gt;
+&nbsp;	 * instance variable with the name {@code &quot;Sien&quot;}. Also assigns &lt;tt&gt;Room&lt;/tt&gt;
+&nbsp;	 * objects to instance variables &lt;tt&gt;k101&lt;/tt&gt; and &lt;tt&gt;k102&lt;/tt&gt; with numbers
+&nbsp;	 * &lt;tt&gt;101&lt;/tt&gt; and &lt;tt&gt;102&lt;/tt&gt; respectively. Lastly, checks in &lt;tt&gt;sien&lt;/tt&gt;
+&nbsp;	 * in room &lt;tt&gt;k102&lt;/tt&gt;.
+&nbsp;	 */
+&nbsp;    @BeforeEach
+&nbsp;    public void setUp() {
+&nbsp;        // initialisation of Guest-variables
+<b class="nc">&nbsp;        ot = new Guest(&quot;Ot&quot;);</b>
+<b class="nc">&nbsp;        sien = new Guest(&quot;Sien&quot;);</b>
+&nbsp;        // initialisation of Room-variables
+<b class="nc">&nbsp;        k101 = new Room(101);</b>
+<b class="nc">&nbsp;        k102 = new Room(102);</b>
+&nbsp;		// check in sien to room 102
+<b class="nc">&nbsp;        sien.checkin(k102);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;	 * Tests if the initial condition complies to the specification.
+&nbsp;	 */
+&nbsp;    @Test
+&nbsp;    public void testInitialcondition() {
+<b class="nc">&nbsp;        assertEquals(&quot;Ot&quot;, ot.getName());</b>
+<b class="nc">&nbsp;        assertEquals(&quot;Sien&quot;, sien.getName());</b>
+<b class="nc">&nbsp;        assertNull(ot.getRoom());</b>
+<b class="nc">&nbsp;        assertEquals(k102, sien.getRoom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tests checking in a new guest in an empty room.
+&nbsp;     * Calls &lt;tt&gt;ot.checkin(k101)&lt;/tt&gt;.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testCheckinEmpty() {
+<b class="nc">&nbsp;        assertTrue(ot.checkin(k101));</b>
+<b class="nc">&nbsp;        assertEquals(k101, ot.getRoom());</b>
+<b class="nc">&nbsp;        assertEquals(ot, k101.getGuest());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks checking in a new guest in a room that is already taken.
+&nbsp;     * Calls &lt;tt&gt;ot.checkin(k102)&lt;/tt&gt;.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testCheckinTaken() {
+<b class="nc">&nbsp;        assertFalse(ot.checkin(k102));</b>
+&nbsp;        //System.out.println(&quot;Room k102 has this guest: &quot; + k102);
+<b class="nc">&nbsp;        assertNull(ot.getRoom());</b>
+<b class="nc">&nbsp;        assertEquals(sien, k102.getGuest());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tests checking out a guest that rented a room.
+&nbsp;     * Calls &lt;tt&gt;sien.checkout()&lt;/tt&gt;.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testCheckoutKnown() {
+<b class="nc">&nbsp;        assertTrue(sien.checkout());</b>
+<b class="nc">&nbsp;        assertNull(sien.getRoom());</b>
+<b class="nc">&nbsp;        assertNull(k102.getGuest());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tests checking out a guest that didn&#39;t rent a room.
+&nbsp;     * Calls &lt;tt&gt;ot.checkout()&lt;/tt&gt;.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testCheckoutUnknown() {
+<b class="nc">&nbsp;        assertNull(ot.getRoom());</b>
+<b class="nc">&nbsp;        assertFalse(ot.checkout());</b>
+<b class="nc">&nbsp;        assertNull(ot.getRoom());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

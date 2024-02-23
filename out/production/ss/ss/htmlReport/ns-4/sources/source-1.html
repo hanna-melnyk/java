@@ -1,0 +1,154 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > DollarsAndCentsCounter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week2</a>
+</div>
+
+<h1>Coverage Summary for Class: DollarsAndCentsCounter (ss.week2)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DollarsAndCentsCounter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week2;
+&nbsp;
+&nbsp;public class DollarsAndCentsCounter {
+&nbsp;
+&nbsp;    private int dollars;
+&nbsp;    private int cents;
+&nbsp;
+&nbsp;    private int dollarsTotal;
+&nbsp;
+&nbsp;    private DollarsAndCentsCounter dollarsAndCentsCounter;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    public DollarsAndCentsCounter() {</b>
+<b class="nc">&nbsp;        this.dollars = dollarsTotal;</b>
+<b class="nc">&nbsp;        this.cents = cents;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**@ensures a return value that is bigger or equal to 0*/
+&nbsp;    public int dollars() {
+<b class="nc">&nbsp;        return dollarsTotal;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**@ensures a return value in the range of 0 to 99*/
+&nbsp;    public int cents() {
+<b class="nc">&nbsp;        return cents;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;/**Adds the speci?ed dollars and cents to this Counter.*/
+&nbsp;    public void add(int dollars, int cents) {
+<b class="nc">&nbsp;        this.dollarsTotal += dollars;</b>
+<b class="nc">&nbsp;        this.cents += cents;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (this.cents &gt; 99) {</b>
+<b class="nc">&nbsp;            this.dollarsTotal += (this.cents / 100);</b>
+<b class="nc">&nbsp;            this.cents =  this.cents % 100;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;/** Reset this Counter to 0.
+&nbsp; * @ensures this Counter is set to 0 dollars and 0 cents
+&nbsp; */
+&nbsp;
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        dollarsTotal = 0;</b>
+<b class="nc">&nbsp;        cents = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

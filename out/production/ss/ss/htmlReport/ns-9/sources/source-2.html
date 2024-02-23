@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > BasicPassword</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week3.password</a>
+</div>
+
+<h1>Coverage Summary for Class: BasicPassword (ss.week3.password)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BasicPassword</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week3.password;
+&nbsp;
+<b class="nc">&nbsp;public class BasicPassword {</b>
+&nbsp;
+&nbsp;/** the standard initial password*/
+&nbsp;//P.3.3 - doesn&#39;t say to what value should INITIAL equal. I&#39;ve put &quot;null&quot; String in order for it to pass the BasicPasswordTest
+&nbsp;    public static final String INITIAL = &quot;null&quot;;
+&nbsp;    private String currentPass;
+&nbsp;//    private final int lengthRestriction = 6;
+&nbsp;//    private final String charactersRestriction = &quot; &quot;;
+&nbsp;
+&nbsp;    private String test;
+&nbsp;    /**Constructs a Password with the initial word provided in INITIAL.\
+&nbsp;     * @ensure testWord(INITIAL) is true for each newly created BasicPassword object*/
+&nbsp;
+<b class="nc">&nbsp;    public BasicPassword() {</b>
+<b class="nc">&nbsp;        this.currentPass = INITIAL;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**Test if a given string is an acceptable password.
+&nbsp;     Not acceptable: A word with less than 6 characters
+&nbsp;     or a word that contains a space.
+&nbsp;     @param suggestion - Word that should be tested
+&nbsp;     @return true if suggestion is acceptable
+&nbsp;     @ensure returns true if the suggestion has at least 6 characters and no spaces
+&nbsp;     */
+&nbsp;
+&nbsp;    public boolean acceptable(String suggestion) {
+<b class="nc">&nbsp;        if (suggestion.length() &gt;= 6 &amp;&amp; !suggestion.contains(&quot; &quot;)) {</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**Changes this password.
+&nbsp;     * @param oldPass - current password
+&nbsp;     * @param newPass - new password
+&nbsp;     * @return true if oldPass is equal to the current password and newPass is a acceptable password
+&nbsp;     * @require oldpass != null, newpass != null
+&nbsp;     * @ensure returns true if the old password is correct and the new one is accceptable
+&nbsp;     * */
+&nbsp;
+&nbsp;    public boolean setWord(String oldPass, String newPass) {
+<b class="nc">&nbsp;        assert oldPass != null: &quot;Error: Old password should not equal to null&quot;;</b>
+<b class="nc">&nbsp;        assert newPass != null: &quot;Error: New password should not equal to null&quot;;</b>
+<b class="nc">&nbsp;        if (oldPass.equals(currentPass) &amp;&amp; acceptable(newPass)) {</b>
+<b class="nc">&nbsp;            this.currentPass = newPass;</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**Tests if a given word is equal to the current password.
+&nbsp;     * @param test - word that should be tested
+&nbsp;     * @return true if test is equal to the current password\
+&nbsp;     * @require test != null*/
+&nbsp;    public boolean testWord(String test) {
+<b class="nc">&nbsp;        assert test != null: &quot;Error: Input password can not be null&quot;;</b>
+<b class="nc">&nbsp;        return test.equals(currentPass);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

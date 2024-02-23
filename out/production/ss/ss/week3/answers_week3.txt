@@ -1,0 +1,47 @@
+    _   _  _ _____      _____ ___  ___   __      _____ ___ _  __   ____
+   /_\ | \| / __\ \    / / __| _ \/ __|  \ \    / / __| __| |/ /  |__ /
+  / _ \| .` \__ \\ \/\/ /| _||   /\__ \   \ \/\/ /| _|| _|| ' <    |_ \
+ /_/ \_\_|\_|___/ \_/\_/ |___|_|_\|___/    \_/\_/ |___|___|_|\_\  |___/
+
+Your name(s):
+-
+-
+
+Please submit your textual answers to the following questions in this file:
+
+- P-3.1
+1. Why is there a constant INITIALto initialise the password upon construction, instead of initialising it simply to an empty String? >> so that the password is authomatically set upon calling the constructor. This way the password is already set for the safe. If the constructor is called by mistake, and the password is an empty string, this could lead to security issues. 
+2. Why is the constant INITIAL declared as public instead of private? >> In order for other classes to be able to access it
+
+
+
+- P-3.14
+• Which packages and classes have been covered the least/ the most? 
+>> package covered the most: hotel & password (when judging by classes covered), package covered the least: bill
+>> class covered the most: PricedSafe, BasicChecker & PricedSafeTest (when judging by methods covered), class covered the least: BasicPassword, BasicPasswordTest, StrongChecker, BillTest
+• Why are some classes covered to 0%? Is this a problem?
+>> There are classes used to test classes other than PricedSafe, thus their code block doesn't refer to PricedSafeTes. Also, BasicChecker is currently almost empty, it only implements Checker interface.
+• Can you improve your test class to increase the coverage? For PricedSafe, coverage is 66% when judging by % of methods tested, and 70% when judging by the lines tested. Methods that have not been tested: 
+1) methods with empty parameters:
+public boolean activate() 
+public void open()
+2) method for deactivation of the safe - we tested the cases that didn't require to deactivate the safe
+
+
+
+- P-3.15
+Give your class PricedSafe a main() method that calls the constructor or a method of PricedSafe
+in such a way that the precondition is violated. Execute the program. Which error do you see? In which
+cases are assertions useful?
+I have created a new safe, and tried to open it without activation:  pricedSafe.open();
+I see assertion error: 
+
+
+java.lang.AssertionError: Error: safe must be active. Please activate the safe
+
+Assertions are used to test conditions that should always be true (can be used for preconditions and postconditions).
+After testing and debugging, when the program is used in the normal way, the assertions in the program will be ignored.
+But if a problem turns up later, we can make a test again, with assetions turned on to locate the error.
+
+
+

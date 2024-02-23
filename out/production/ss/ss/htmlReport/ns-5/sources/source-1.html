@@ -1,0 +1,176 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > Guest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week2.hotel</a>
+</div>
+
+<h1>Coverage Summary for Class: Guest (ss.week2.hotel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Guest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week2.hotel;
+&nbsp;
+&nbsp;
+&nbsp;/**@author Hanna Melnyk*/
+&nbsp;public class Guest {
+&nbsp;
+&nbsp;
+&nbsp;    private String name;
+&nbsp;    private Room room;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /** Returns a String representation of a guest*/
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Guest &quot; + this.getName();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**Constructs a new guest with a given name
+&nbsp;     * @param name of the guest*/
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    public Guest(String name) {</b>
+<b class="nc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**Returns the name of the guest
+&nbsp;     * @return name of the guest*/
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        return this.name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @return room of the guest*/
+&nbsp;    public Room getRoom() {
+<b class="nc">&nbsp;        return this.room;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /** Checks the guest into a room
+&nbsp;     * @param room number
+&nbsp;     * @requires the room chosen for check-in is not occupied
+&nbsp;     * @return true if check-in is successful, false otherwise
+&nbsp;     * (if the room is already taken, etc)*/
+&nbsp;    public boolean checkin(Room room){
+<b class="nc">&nbsp;        if (room.getGuest() == null &amp;&amp; this.room == null) {</b>
+<b class="nc">&nbsp;            room.setGuest(this);</b>
+<b class="nc">&nbsp;            this.room = room;</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**Checks the guest out from the room
+&nbsp;     * @requires the guest is checked into a room
+&nbsp;     * @return true if check-out is successful, false otherwise */
+&nbsp;    public boolean checkout() {
+<b class="nc">&nbsp;        if (this.room != null) {</b>
+<b class="nc">&nbsp;            this.room.setGuest(null);</b>
+<b class="nc">&nbsp;            this.room = null;</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

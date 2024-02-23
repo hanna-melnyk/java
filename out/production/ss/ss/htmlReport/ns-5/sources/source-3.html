@@ -1,0 +1,258 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > HotelTUI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week2.hotel</a>
+</div>
+
+<h1>Coverage Summary for Class: HotelTUI (ss.week2.hotel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HotelTUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/43)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week2.hotel;
+&nbsp;
+&nbsp;import ss.utils.TextIO;
+&nbsp;
+&nbsp;public class HotelTUI {
+&nbsp;    private Hotel hotel;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for HotelTUI with the name of the hotel as an argument.
+&nbsp;     *
+&nbsp;     * @param hotelName The name of the hotel.
+&nbsp;     */
+<b class="nc">&nbsp;    public HotelTUI(String hotelName) {</b>
+<b class="nc">&nbsp;        this.hotel = new Hotel(hotelName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints the help menu with available commands.
+&nbsp;     */
+&nbsp;    public void printHelpMenu() {
+<b class="nc">&nbsp;        System.out.println(String.format(&quot;Welcome to the Hotel booking system of the %s&quot;, hotel.getHotelName()));</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Commands:&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;i name ........... check in guest with name&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;o name ........... check out guest with name&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;r name ........... request room of guest&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;h ................ help (this menu)&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;p ................ print state&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;x ................ exit&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints the current state of the hotel.
+&nbsp;     */
+&nbsp;    public void printState() {
+<b class="nc">&nbsp;        System.out.println(hotel.toString());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts the hotel text-based user interface.
+&nbsp;     */
+&nbsp;    public void start() {
+<b class="nc">&nbsp;        boolean exit = false;</b>
+<b class="nc">&nbsp;        while (!exit) {</b>
+&nbsp;            //System.out.println(&quot;Your command:&quot;);
+&nbsp;            String input;
+<b class="nc">&nbsp;            input = TextIO.getln();</b>
+<b class="nc">&nbsp;            String[] split = input.split(&quot; &quot;);</b>
+<b class="nc">&nbsp;            char command = split[0].charAt(0);</b>
+<b class="nc">&nbsp;            String parm = null;</b>
+<b class="nc">&nbsp;            if (split.length &gt;1) {</b>
+<b class="nc">&nbsp;                parm = split[1];</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            switch (command) {</b>
+&nbsp;                case &#39;i&#39;:
+<b class="nc">&nbsp;                    hotel.checkIn(parm);</b>
+<b class="nc">&nbsp;                    System.out.println(&quot;Guest &quot;+parm + &quot; has checked into a room &quot; + hotel.getRoom(parm));</b>
+<b class="nc">&nbsp;                    if (hotel.getRoom(parm) == null) {</b>
+<b class="nc">&nbsp;                        System.out.println(&quot;Check-in failed&quot;);</b>
+&nbsp;                    }
+&nbsp;                    break;
+&nbsp;                case &#39;o&#39;:
+<b class="nc">&nbsp;                    hotel.checkOut(parm);</b>
+<b class="nc">&nbsp;                    System.out.println(&quot;Guest &quot; + parm + &quot; successfully checked out.&quot;);</b>
+<b class="nc">&nbsp;                    if (hotel.getRoom(parm) !=null) {</b>
+<b class="nc">&nbsp;                        System.out.println(&quot;Check-out failed&quot;);</b>
+&nbsp;                    }
+&nbsp;                    break;
+&nbsp;                case &#39;r&#39;:
+<b class="nc">&nbsp;                    hotel.getRoom(parm);</b>
+<b class="nc">&nbsp;                    Room requestedRoom = hotel.getRoom(parm);</b>
+<b class="nc">&nbsp;                    if (requestedRoom != null) {</b>
+<b class="nc">&nbsp;                        System.out.println(&quot;Guest &quot; + parm + &quot; has room &quot; + requestedRoom.getNumber());</b>
+&nbsp;                    } else {
+<b class="nc">&nbsp;                        System.out.println(&quot;Guest &quot; + parm + &quot; not found or not checked in&quot;);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &#39;h&#39;:
+<b class="nc">&nbsp;                    printHelpMenu();</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &#39;p&#39;:
+<b class="nc">&nbsp;                    printState();</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &#39;x&#39;:
+<b class="nc">&nbsp;                    exit = true;</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                default:
+<b class="nc">&nbsp;                    System.out.println(&quot;Error. Command is not recognized. \nPlease rewrite your command:&quot;);</b>
+&nbsp;                    break;
+&nbsp;
+&nbsp;                    //System.out.println(&quot;Error. Command is not recognized. \n Please rewrite your command&quot;);
+&nbsp;            }
+&nbsp;
+&nbsp;
+&nbsp;//            if (command.length() == 1) {
+&nbsp;//                char singleCommand = command.charAt(0);
+&nbsp;//                if (singleCommand == IN) {
+&nbsp;//                    if (parm == null) {
+&nbsp;//                        System.out.println(&quot;Error. No guest name entered. \n Please rewrite your command again&quot;);
+&nbsp;//
+&nbsp;//                    } else if (!getFreeRoom().isEmpty()) {
+&nbsp;//                        String availableRoom = getFreeRoom();
+&nbsp;//                        roomsGuestList.put(availableRoom, parm);
+&nbsp;//
+&nbsp;//                        System.out.println(String.format(&quot;Guest %s is checked into room %s&quot;, parm, availableRoom));
+&nbsp;//                    }
+&nbsp;//                } else if (singleCommand == OUT) {
+&nbsp;//                    if (parm == null) {
+&nbsp;//                        System.out.println(&quot;Error. No guest name entered. \n Please rewrite your command again&quot;);
+&nbsp;//
+&nbsp;//                    } else if (getRoomByName(parm) == null) {
+&nbsp;//                        System.out.println(&quot;Error. Guest entered has not occupied a room&quot;);
+&nbsp;//                    }
+&nbsp;//                    else {
+&nbsp;//                        roomsGuestList.put(getRoomByName(parm), &quot;&quot;);
+&nbsp;//                        System.out.println(&quot;Guest &quot; + parm + &quot; successfully checked out.&quot;);
+&nbsp;//                    }
+&nbsp;//
+&nbsp;//                } else if (singleCommand == ROOM) {
+&nbsp;//                    if (parm == null) {
+&nbsp;//                        System.out.println(&quot;Error. No guest name entered. \n Please rewrite your command again&quot;);
+&nbsp;//
+&nbsp;//                    } else if (getRoomByName(parm) == null) {
+&nbsp;//                        System.out.println(&quot;Error. Guest entered has not occupied a room&quot;);
+&nbsp;//                    } else {
+&nbsp;//                        System.out.println(&quot;Guest &quot; + parm + &quot; has room &quot; + getRoomByName(parm));
+&nbsp;//                    }
+&nbsp;//                } else if (singleCommand == PRINT) {
+&nbsp;//                    System.out.println(hotel + &quot;:&quot;);
+&nbsp;//                    printHotelList();
+&nbsp;//                } else if (singleCommand == EXIT) {
+&nbsp;//                    exit = true;
+&nbsp;//                    break;
+&nbsp;//                } else {
+&nbsp;//                    System.out.println(&quot;Error. Command is not recognized. \n Please rewrite your command&quot;);
+&nbsp;//                }
+&nbsp;//
+&nbsp;//            } else {
+&nbsp;//                System.out.println(&quot;Error. Command is not recognized. \n Please rewrite your command&quot;);
+&nbsp;//            }
+&nbsp;
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        new HotelTUI(&quot;U Parkhotel&quot;).start();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

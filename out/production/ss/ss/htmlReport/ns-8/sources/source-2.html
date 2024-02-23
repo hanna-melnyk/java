@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > Room</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week3.hotel</a>
+</div>
+
+<h1>Coverage Summary for Class: Room (ss.week3.hotel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Room</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week3.hotel;
+&nbsp;
+&nbsp;import ss.week2.hotel.Guest;
+&nbsp;
+&nbsp;public class Room {
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Room &quot; + this.getNumber();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private int number;
+&nbsp;    private Guest guest;
+&nbsp;
+&nbsp;    private Safe safe;
+&nbsp;
+&nbsp;    /**
+&nbsp;    * Creates a &lt;code&gt;Room&lt;/code&gt; with the given number, without a guest.
+&nbsp;    * @param number number of the new &lt;code&gt;Room&lt;/code&gt;
+&nbsp;    */
+&nbsp;    public Room(int number) {
+<b class="nc">&nbsp;    	this(number, new Safe());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of this Room
+&nbsp;     */
+&nbsp;    public int getNumber() {
+<b class="nc">&nbsp;    	return this.number;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the current guest living in this Room
+&nbsp;     * @return the guest of this Room, null if not rented
+&nbsp;     */
+&nbsp;    public Guest getGuest() {
+<b class="nc">&nbsp;    	return this.guest;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Assigns a Guest to this Room.
+&nbsp;     * @param guest the new guest renting this Room, if null is given, Room is empty afterwards
+&nbsp;     */
+&nbsp;    public void setGuest(Guest guest) {
+<b class="nc">&nbsp;    	this.guest = guest;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /** created a method in order to get the safe of a room*/
+&nbsp;    public Safe getSafe() {
+<b class="nc">&nbsp;        return this.safe;</b>
+&nbsp;    }
+&nbsp;    /** constructors:*/
+<b class="nc">&nbsp;    public Room(int number, Safe safe) {</b>
+<b class="nc">&nbsp;        this.number = number;</b>
+<b class="nc">&nbsp;        this.safe = safe;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

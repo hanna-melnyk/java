@@ -1,0 +1,231 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > HotelTest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week2.test</a>
+</div>
+
+<h1>Coverage Summary for Class: HotelTest (ss.week2.test)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HotelTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week2.test;
+&nbsp;
+&nbsp;import org.hamcrest.CoreMatchers;
+&nbsp;import static org.hamcrest.MatcherAssert.assertThat;
+&nbsp;
+&nbsp;import org.junit.jupiter.api.BeforeEach;
+&nbsp;import org.junit.jupiter.api.Test;
+&nbsp;
+&nbsp;import ss.week2.hotel.Hotel;
+&nbsp;import ss.week2.hotel.Safe;
+&nbsp;import ss.week2.hotel.Room;
+&nbsp;import ss.week2.hotel.Guest;
+&nbsp;
+&nbsp;import static org.junit.jupiter.api.Assertions.*;
+&nbsp;
+<b class="nc">&nbsp;public class HotelTest {</b>
+&nbsp;    /** Test variable for a &lt;tt&gt;Hotel&lt;/tt&gt; object. */
+&nbsp;    private Hotel hotel;
+&nbsp;    public static final String GUEST_NAME_1 = &quot;Major Gowen&quot;;
+&nbsp;    public static final String GUEST_NAME_2 = &quot;Miss Tibbs&quot;;
+&nbsp;    public static final String GUEST_NAME_3 = &quot;Miss Gatsby&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the instance variable &lt;tt&gt;hotel&lt;/tt&gt; to a well-defined initial value.
+&nbsp;     * All test methods should be preceded by a call to this method.
+&nbsp;     */
+&nbsp;    @BeforeEach
+&nbsp;    public void setUp() {
+<b class="nc">&nbsp;        hotel = new Hotel(&quot;U Parkhotel&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * checkIn must, as long as rooms are available, return a room occupied by the specified guest.
+&nbsp;     * When the hotel is full, checkIn must return null.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testCheckIn() {
+<b class="nc">&nbsp;        Room room1 = hotel.checkIn(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        assertEquals(GUEST_NAME_1, room1.getGuest().getName(), &quot;Correct 1st guest check in&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Room room2 = hotel.checkIn(GUEST_NAME_2);</b>
+<b class="nc">&nbsp;        assertEquals(GUEST_NAME_2, room2.getGuest().getName(), &quot;Correct 2nd guest check in&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Room noRoom = hotel.checkIn(GUEST_NAME_3);</b>
+<b class="nc">&nbsp;        assertNull(noRoom, &quot;No check in when hotel is full&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If the specified guest is checked in, he must be checked out, i.e., afterwards, he must not have a room anymore,
+&nbsp;     * and his room must now be empty. The room&#39;s safe must be inactivated as well.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testCheckoutOccupiedRoom() {
+<b class="nc">&nbsp;        Room room = hotel.checkIn(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        Guest guest = room.getGuest();</b>
+<b class="nc">&nbsp;        Safe safe = room.getSafe();</b>
+<b class="nc">&nbsp;        safe.activate();</b>
+&nbsp;
+<b class="nc">&nbsp;        hotel.checkOut(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        assertNull(guest.getRoom(), &quot;Guest has no room&quot;);</b>
+<b class="nc">&nbsp;        assertNull(room.getGuest(), &quot;Room has no guest&quot;);</b>
+<b class="nc">&nbsp;        assertFalse(safe.isActive(), &quot;Safe is inactive&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void testCheckoutEmptyRoom() {
+<b class="nc">&nbsp;        hotel.checkOut(GUEST_NAME_1);</b>
+&nbsp;        // nothing to be checked here, but no exception should occur.
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If there is a free room, getFreeRoom must return a room without guest.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testGetFreeRoomFromNotFullHotel() {
+<b class="nc">&nbsp;        Room room = hotel.getFreeRoom();</b>
+<b class="nc">&nbsp;        assertNull(room.getGuest(), &quot;A room is free&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        hotel.checkIn(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        Room freeRoom = hotel.getFreeRoom();</b>
+<b class="nc">&nbsp;        assertNotNull(freeRoom, &quot;Another room is free&quot;);</b>
+<b class="nc">&nbsp;        assertNotEquals(room, freeRoom, &quot;Another room is free&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If there is no free room, getFreeRoom must return null.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testGetFreeRoomFromFullHotel() {
+<b class="nc">&nbsp;        hotel.checkIn(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        hotel.checkIn(GUEST_NAME_2);</b>
+&nbsp;
+<b class="nc">&nbsp;        Room noRoom = hotel.getFreeRoom();</b>
+<b class="nc">&nbsp;        assertNull(noRoom, &quot;No room available in a full hotel&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * getRoom must not return any room, if the guest is not checked in
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testGetRoomBeforeCheckIn() {
+<b class="nc">&nbsp;        Room room = hotel.getRoom(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        assertNull(room, &quot;Guest 1 not checked in&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If the guest is checked in, the returned room must be occupied by the specified guest.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testGetRoomAfterCheckIn() {
+<b class="nc">&nbsp;        hotel.checkIn(GUEST_NAME_1);</b>
+&nbsp;
+<b class="nc">&nbsp;        Room room = hotel.getRoom(GUEST_NAME_1);</b>
+<b class="nc">&nbsp;        assertEquals(GUEST_NAME_1, room.getGuest().getName(),&quot;Guest 1 checked in&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * ToString is difficult to test fully because there is no restriction on the format of the returned String.
+&nbsp;     * At least it can be tested that a String is returned and that it contains the name of a checked in guest.
+&nbsp;     */
+&nbsp;    @Test
+&nbsp;    public void testToString() {
+<b class="nc">&nbsp;        hotel.checkIn(GUEST_NAME_1);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertThat(hotel.toString(), CoreMatchers.containsString(GUEST_NAME_1));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

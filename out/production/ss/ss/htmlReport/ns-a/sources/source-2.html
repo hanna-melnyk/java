@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > BillTest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week3.test</a>
+</div>
+
+<h1>Coverage Summary for Class: BillTest (ss.week3.test)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BillTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BillTest$TestItem</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week3.test;
+&nbsp;
+&nbsp;import org.junit.Test;
+&nbsp;import org.junit.jupiter.api.BeforeEach;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;import ss.week3.bill.Bill;
+&nbsp;import ss.week3.bill.StringPrinter;
+&nbsp;
+&nbsp;import static org.junit.jupiter.api.Assertions.*;
+&nbsp;
+<b class="nc">&nbsp;public class BillTest {</b>
+&nbsp;private Bill bill;
+&nbsp;private StringPrinter printer;
+&nbsp;
+&nbsp;    public class TestItem implements Bill.Item{
+&nbsp;        // create a constructor (description, price)
+&nbsp;        // protected String description, protected double price
+&nbsp;        private String text;
+&nbsp;        private double amount;
+&nbsp;        /** Constructor*/
+<b class="nc">&nbsp;        public TestItem(String text, double amount) {</b>
+<b class="nc">&nbsp;            this.text = text;</b>
+<b class="nc">&nbsp;            this.amount = amount;</b>
+&nbsp;        }
+&nbsp;        //
+&nbsp;        @Override
+&nbsp;        public double getAmount() {
+<b class="nc">&nbsp;            return amount;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        @Override
+&nbsp;        public String toString() {
+<b class="nc">&nbsp;            return text;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;@BeforeEach
+&nbsp;public void setUp() {
+<b class="nc">&nbsp;    this.printer = new StringPrinter();</b>
+<b class="nc">&nbsp;    this.bill = new Bill(printer);</b>
+&nbsp;}
+&nbsp;
+&nbsp;@Test
+&nbsp;public void testBeginState() {
+<b class="nc">&nbsp;    this.printer = new StringPrinter();</b>
+<b class="nc">&nbsp;    this.bill = new Bill(printer);</b>
+<b class="nc">&nbsp;    assertEquals(0, bill.getSum(), 0.0005);</b>
+&nbsp;}
+&nbsp;
+&nbsp;@Test
+&nbsp;public void testNewItem() {
+<b class="nc">&nbsp;    this.printer = new StringPrinter();</b>
+<b class="nc">&nbsp;    this.bill = new Bill(printer);</b>
+<b class="nc">&nbsp;    Bill.Item item1 = new TestItem(&quot;Item1&quot;, 10);</b>
+<b class="nc">&nbsp;    Bill.Item item2 = new TestItem(&quot;Item2&quot;, 15);</b>
+<b class="nc">&nbsp;    bill.addItem(item1);</b>
+<b class="nc">&nbsp;    bill.addItem(item2);</b>
+<b class="nc">&nbsp;    bill.close();</b>
+<b class="nc">&nbsp;    assertEquals(25, bill.getSum(), 0.0005);</b>
+&nbsp;}
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

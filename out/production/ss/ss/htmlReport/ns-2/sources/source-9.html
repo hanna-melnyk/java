@@ -1,0 +1,261 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > ThreeWayLamp</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week1</a>
+</div>
+
+<h1>Coverage Summary for Class: ThreeWayLamp (ss.week1)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ThreeWayLamp</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/45)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ThreeWayLamp$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ThreeWayLamp$LampState</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week1;
+&nbsp;import ss.utils.TextIO;
+&nbsp;
+&nbsp;public class ThreeWayLamp {
+&nbsp;
+&nbsp;    /*enums*/
+<b class="nc">&nbsp;    public enum LampState {</b>
+<b class="nc">&nbsp;        OFF, LOW, MEDIUM, HIGH</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /*attribute to hold the state of the lamp*/
+&nbsp;    private LampState lampState;
+&nbsp;
+&nbsp;    /*getter and setter*/
+&nbsp;
+&nbsp;    public LampState getLampState() {
+<b class="nc">&nbsp;        return lampState;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public void setLampState(LampState lampState) {
+&nbsp;
+<b class="nc">&nbsp;        this.lampState = lampState;</b>
+<b class="nc">&nbsp;        System.out.println(&quot;This lamp&#39;s state is set to &quot; + lampState);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /*constructor - is it needed? to store the default value at least*/
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    private ThreeWayLamp() {</b>
+<b class="nc">&nbsp;        this.lampState = LampState.OFF;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void printState() {
+<b class="nc">&nbsp;        System.out.println(&quot;Current lamp state: &quot; + getLampState());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public void nextState() {
+&nbsp;        /*Store original state for the assertion*/
+&nbsp;
+<b class="nc">&nbsp;        switch (lampState) {</b>
+&nbsp;            case OFF:
+<b class="nc">&nbsp;                setLampState(LampState.LOW);</b>
+&nbsp;            case LOW:
+<b class="nc">&nbsp;                setLampState(LampState.MEDIUM);</b>
+&nbsp;            case MEDIUM:
+<b class="nc">&nbsp;                setLampState(LampState.HIGH);</b>
+&nbsp;            case HIGH:
+<b class="nc">&nbsp;                setLampState(LampState.OFF);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /*Prints a help menu explaining how the user should interact with the program*/
+&nbsp;    public void printHelp() {
+<b class="nc">&nbsp;        System.out.println(&quot;******You have entered a help menu****** \nUser instructions:\n&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;OFF: Set the lamp to OFF&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;LOW: Set the lamp to LOW&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;MEDIUM: Set the lamp to MEDIUM&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;HIGH: Set the lamp to HIGH&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;STATE: Print the current setting of the lamp&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;NEXT: Change to the next setting, observing the order OFF ? LOW ? MEDIUM ? HIGH ? OFF&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;HELP: Show a help menu, explaining how the user should interact with the program&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;EXIT: Quit the program&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        ThreeWayLamp lamp = new ThreeWayLamp();</b>
+<b class="nc">&nbsp;        boolean exit = false;</b>
+<b class="nc">&nbsp;        while (!exit) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Input your lamp state: &quot;);</b>
+&nbsp;            String input;
+<b class="nc">&nbsp;            input = TextIO.getln().toUpperCase();</b>
+<b class="nc">&nbsp;            switch (input) {</b>
+&nbsp;                case &quot;OFF&quot;:
+<b class="nc">&nbsp;                    lamp.setLampState(LampState.OFF);</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;LOW&quot;:
+<b class="nc">&nbsp;                    lamp.setLampState(LampState.LOW);</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;MEDIUM&quot;:
+<b class="nc">&nbsp;                    lamp.setLampState(LampState.MEDIUM);</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;HIGH&quot;:
+<b class="nc">&nbsp;                    lamp.setLampState(LampState.HIGH);</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;STATE&quot;:
+<b class="nc">&nbsp;                    lamp.printState();</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;NEXT&quot;:
+<b class="nc">&nbsp;                    lamp.nextState();</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;HELP&quot;:
+<b class="nc">&nbsp;                    lamp.printHelp();</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                case &quot;EXIT&quot;:
+<b class="nc">&nbsp;                    System.out.println(&quot;You have exited the program&quot;);</b>
+<b class="nc">&nbsp;                    exit = true;</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                default:
+<b class="nc">&nbsp;                    System.out.println(&quot;The input is not valid. Try again&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>

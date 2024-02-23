@@ -1,0 +1,175 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > CountDivisors</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ss.week1</a>
+</div>
+
+<h1>Coverage Summary for Class: CountDivisors (ss.week1)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CountDivisors</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ss.week1;
+&nbsp;
+&nbsp;import ss.utils.TextIO;
+&nbsp;
+&nbsp;/**
+&nbsp; * This program reads a positive integer from the user.
+&nbsp; * It counts how many divisors that number has, and
+&nbsp; * then it prints the result.
+&nbsp; * 
+&nbsp; * (Note: This program works for any integer in the range
+&nbsp; * 1 to 2147483646, but it crashes with a division-by-zero
+&nbsp; * when run with input 2147483647, the largest value of type
+&nbsp; * int.  This happens because 2147483647 + 1 is -2147483648,
+&nbsp; * the smallest value of type int.   So, after processing
+&nbsp; * testDivisor = 2147483647, testDivisor becomes -2147483648,
+&nbsp; * and the loop continues.  Eventually, testDivisor will be 
+&nbsp; * zero, and the expression  N % testDivisor is trying to
+&nbsp; * divide N by zero.)
+&nbsp; */
+&nbsp;
+<b class="nc">&nbsp;public class CountDivisors {</b>
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+&nbsp;
+&nbsp;        int n;  // A positive integer entered by the user.
+&nbsp;                // Divisors of this number will be counted.
+&nbsp;
+&nbsp;        int testDivisor;  // A number between 1 and N that is a
+&nbsp;                          // possible divisor of N.
+&nbsp;
+&nbsp;        int divisorCount;  // Number of divisors of N that have been found.
+&nbsp;
+&nbsp;        int numberTested;  // Used to count how many possible divisors
+&nbsp;                           // of N have been tested.  When the number
+&nbsp;                           // reaches 1000000, a period is output and
+&nbsp;                           // the value of numberTested is reset to zero.
+&nbsp;
+&nbsp;        /* Get a positive integer from the user. */
+&nbsp;
+&nbsp;        while (true) {
+<b class="nc">&nbsp;            System.out.print(&quot;Enter a positive integer: &quot;);</b>
+<b class="nc">&nbsp;            n = TextIO.getlnInt();</b>
+<b class="nc">&nbsp;            if (n &gt; 0)</b>
+<b class="nc">&nbsp;                break;</b>
+<b class="nc">&nbsp;            System.out.println(&quot;That number is not positive.  Please try again.&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /* Count the divisors, printing a &quot;.&quot; after every 1000000 tests. */
+&nbsp;
+<b class="nc">&nbsp;        divisorCount = 0;</b>
+<b class="nc">&nbsp;        numberTested = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;        for (testDivisor = 1; testDivisor &lt;= n; testDivisor++) {</b>
+<b class="nc">&nbsp;            if ( n % testDivisor == 0 )</b>
+<b class="nc">&nbsp;                divisorCount++;</b>
+<b class="nc">&nbsp;            numberTested++;</b>
+<b class="nc">&nbsp;            if (numberTested == 1000000) {</b>
+<b class="nc">&nbsp;                System.out.print(&#39;.&#39;);</b>
+<b class="nc">&nbsp;                numberTested = 0;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        /* Display the result. */
+&nbsp;
+<b class="nc">&nbsp;        System.out.println();</b>
+<b class="nc">&nbsp;        System.out.println(&quot;The number of divisors of &quot; + n</b>
+&nbsp;                + &quot; is &quot; + divisorCount);
+&nbsp;
+&nbsp;    } // end main()
+&nbsp;
+&nbsp;} // end class CountDivisors
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-28 17:15</div>
+</div>
+</body>
+</html>
